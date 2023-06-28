@@ -11,13 +11,12 @@ from models.embed import DataEmbedding
 import datetime
 
 class Informer(nn.Module):
-    def __init__(self, enc_in, dec_in, c_out, seq_len, label_len, out_len, 
-                factor=5, d_model=512, n_heads=8, e_layers=3, d_layers=2, d_ff=512, 
-                dropout=0.0, attn='prob', embed='fixed', freq=datetime.timedelta(hours=1), activation='gelu',
-                output_attention = False, distil=True, mix=True,
-                device=torch.device('cuda:0')):
+    def __init__(self, enc_in, dec_in, c_out, seq_len, label_len, pred_len, 
+                factor, d_model, n_heads, e_layers, d_layers, d_ff,
+                dropout, embed, freq: datetime.timedelta, activation, distil,
+                output_attention = False, mix=True, attn='prob'):
         super(Informer, self).__init__()
-        self.pred_len = out_len
+        self.pred_len = pred_len
         self.attn = attn
         self.output_attention = output_attention
 
@@ -62,7 +61,7 @@ class Informer(nn.Module):
             ],
             norm_layer=torch.nn.LayerNorm(d_model)
         )
-        # self.end_conv1 = nn.Conv1d(in_channels=label_len+out_len, out_channels=out_len, kernel_size=1, bias=True)
+        # self.end_conv1 = nn.Conv1d(in_channels=label_len+pred_len, out_channels=pred_len, kernel_size=1, bias=True)
         # self.end_conv2 = nn.Conv1d(in_channels=d_model, out_channels=c_out, kernel_size=1, bias=True)
         self.projection = nn.Linear(d_model, c_out, bias=True)
         
@@ -84,13 +83,12 @@ class Informer(nn.Module):
 
 
 class InformerStack(nn.Module):
-    def __init__(self, enc_in, dec_in, c_out, seq_len, label_len, out_len, 
+    def __init__(self, enc_in, dec_in, c_out, seq_len, label_len, pred_len, 
                 factor=5, d_model=512, n_heads=8, e_layers=[3,2,1], d_layers=2, d_ff=512, 
                 dropout=0.0, attn='prob', embed='fixed', freq=datetime.timedelta(hours=1), activation='gelu',
-                output_attention = False, distil=True, mix=True,
-                device=torch.device('cuda:0')):
+                output_attention = False, distil=True, mix=True):
         super(InformerStack, self).__init__()
-        self.pred_len = out_len
+        self.pred_len = pred_len
         self.attn = attn
         self.output_attention = output_attention
 
@@ -139,7 +137,7 @@ class InformerStack(nn.Module):
             ],
             norm_layer=torch.nn.LayerNorm(d_model)
         )
-        # self.end_conv1 = nn.Conv1d(in_channels=label_len+out_len, out_channels=out_len, kernel_size=1, bias=True)
+        # self.end_conv1 = nn.Conv1d(in_channels=label_len+pred_len, out_channels=pred_len, kernel_size=1, bias=True)
         # self.end_conv2 = nn.Conv1d(in_channels=d_model, out_channels=c_out, kernel_size=1, bias=True)
         self.projection = nn.Linear(d_model, c_out, bias=True)
         
