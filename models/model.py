@@ -1,10 +1,10 @@
 import torch
 import torch.nn as nn
 
-from layers.encoder import Encoder, EncoderLayer, ConvLayer, EncoderStack
-from layers.decoder import Decoder, DecoderLayer
-from layers.attn import FullAttention, ProbAttention, AttentionLayer
-from layers.embed import DataEmbedding
+from informer_layers.encoder import Encoder, EncoderLayer, ConvLayer, EncoderStack
+from informer_layers.decoder import Decoder, DecoderLayer
+from informer_layers.attn import FullAttention, ProbAttention, AttentionLayer
+from informer_layers.embed import DataEmbedding
 
 import datetime
 
