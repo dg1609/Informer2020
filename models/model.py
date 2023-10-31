@@ -66,11 +66,11 @@ class Informer(nn.Module):
         self.projection = nn.Linear(d_model, c_out, bias=True)
 
     def forward(self, x_enc, x_mark_enc, x_dec, x_mark_dec,
-                enc_self_mask=None, dec_self_mask=None, dec_enc_mask=None):
-        enc_out = self.enc_embedding(x_enc, x_mark_enc)
+                enc_self_mask=None, dec_self_mask=None, dec_enc_mask=None, node_embedding=None):
+        enc_out = self.enc_embedding(x_enc, x_mark_enc, node_embedding=node_embedding)
         enc_out, attns = self.encoder(enc_out, attn_mask=enc_self_mask)
 
-        dec_out = self.dec_embedding(x_dec, x_mark_dec)
+        dec_out = self.dec_embedding(x_dec, x_mark_dec, node_embedding=node_embedding)
         dec_out = self.decoder(dec_out, enc_out, x_mask=dec_self_mask, cross_mask=dec_enc_mask)
         dec_out = self.projection(dec_out)
 
@@ -144,11 +144,11 @@ class InformerStack(nn.Module):
         self.projection = nn.Linear(d_model, c_out, bias=True)
 
     def forward(self, x_enc, x_mark_enc, x_dec, x_mark_dec,
-                enc_self_mask=None, dec_self_mask=None, dec_enc_mask=None):
-        enc_out = self.enc_embedding(x_enc, x_mark_enc)
+                enc_self_mask=None, dec_self_mask=None, dec_enc_mask=None, node_embedding=None):
+        enc_out = self.enc_embedding(x_enc, x_mark_enc, node_embedding=node_embedding)
         enc_out, attns = self.encoder(enc_out, attn_mask=enc_self_mask)
 
-        dec_out = self.dec_embedding(x_dec, x_mark_dec)
+        dec_out = self.dec_embedding(x_dec, x_mark_dec, node_embedding=node_embedding)
         dec_out = self.decoder(dec_out, enc_out, x_mask=dec_self_mask, cross_mask=dec_enc_mask)
         dec_out = self.projection(dec_out)
 
